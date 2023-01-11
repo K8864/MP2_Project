@@ -10,6 +10,8 @@ import java.io.IOException;
 public class Enemy extends Entity{
     GamePanel gp;
 
+    int[][] spawns = new int[2][13];
+
     public Enemy(GamePanel gp) {
         this.gp = gp;
         speed = 3;
@@ -37,6 +39,14 @@ public class Enemy extends Entity{
             e.printStackTrace();
         }
         return image;
+    }
+
+    public void setValues() {
+        hp = 3;
+        speed = 3;
+        direction = "down";
+        spawns[1][0] = 12;
+        spawns[2][0] = 16;
     }
 
 }
