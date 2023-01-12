@@ -52,9 +52,9 @@ public class Bullet extends Entity {
 
     public void shoot(Bullet b) {
         gp.click.shot = false;
-        gp.click.x = MouseInfo.getPointerInfo().getLocation().x- Main.window.getLocation().x;
-        gp.click.y = MouseInfo.getPointerInfo().getLocation().y-Main.window.getLocation().y;
-        b.target(gp.click.x, gp.click.y-30);
+        gp.click.x = MouseInfo.getPointerInfo().getLocation().x- Main.window.getLocation().x-7;
+        gp.click.y = MouseInfo.getPointerInfo().getLocation().y-Main.window.getLocation().y-30;
+        b.target(gp.click.x, gp.click.y);
     }
 
     public static void reload() {
@@ -86,7 +86,5 @@ public class Bullet extends Entity {
         if(!collisionOn) {
             g2.drawImage(pew, (int) screenX, (int) screenY, gp.tileSize, gp.tileSize, null);
         }
-        else
-            g2.drawImage(pew, Integer.MAX_VALUE, Integer.MAX_VALUE, gp.tileSize, gp.tileSize, null);
     }
 }

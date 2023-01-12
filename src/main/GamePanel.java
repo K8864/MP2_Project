@@ -52,8 +52,11 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
     }
 
+    public void setUpGame() {
+        gameState = titleState;
+    }
+
     public void startGameThread() {
-        gameState = playState;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -80,20 +83,18 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if(gameState == playState) {
+        if(gameState == titleState) {
+            ui.update();
+        }
+        else
             player.update();
-        }
-        else if(gameState == titleState){
-
-        }
-
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         if(gameState == titleState) {
-
+            ui.draw(g2);
         }
         else {
             tileM.draw(g2);

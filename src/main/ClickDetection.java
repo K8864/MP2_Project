@@ -7,6 +7,7 @@ public class ClickDetection implements MouseListener {
     public int x = 0;
     public int y = 0;
     public boolean shot = false;
+    public boolean click = false;
     boolean shooting = false;
 
     public ClickDetection() {
@@ -23,12 +24,14 @@ public class ClickDetection implements MouseListener {
         x = e.getX();
         y = e.getY();
         shot = true;
+        click = true;
         shooting = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         shooting = false;
+        click = false;
     }
 
     @Override
