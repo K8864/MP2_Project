@@ -1,5 +1,6 @@
 package entity;
 
+import main.ClickDetection;
 import main.GamePanel;
 import main.Main;
 
@@ -9,9 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Bullet extends Entity {
-    static GamePanel gp;
     public static int ammo = 30;
-    public double worldX, worldY, startX, startY, endX, endY, screenX, screenY, cosine, sine, slope;
+    public double startX, startY, endX, endY, screenX, screenY, cosine, sine, slope;
     public int speed = 9;
     private static int frameR = 0;
     public BufferedImage pew;
@@ -19,8 +19,8 @@ public class Bullet extends Entity {
 
 
     public Bullet(GamePanel gp) {
+        super(gp);
         getBulletImage();
-        Bullet.gp = gp;
     }
 
     public void getBulletImage() {
@@ -31,7 +31,7 @@ public class Bullet extends Entity {
             e.printStackTrace();
         }
         solidArea = new Rectangle(21, 21, 6, 6);
-        speed = 9;
+        speed = 10;
         collisionOn = false;
     }
 
@@ -51,10 +51,10 @@ public class Bullet extends Entity {
     }
 
     public void shoot(Bullet b) {
-        gp.click.shot = false;
-        gp.click.x = MouseInfo.getPointerInfo().getLocation().x- Main.window.getLocation().x-7;
-        gp.click.y = MouseInfo.getPointerInfo().getLocation().y-Main.window.getLocation().y-30;
-        b.target(gp.click.x, gp.click.y);
+        ClickDetection.shot = false;
+        gp.clickChecker.x = MouseInfo.getPointerInfo().getLocation().x- Main.window.getLocation().x-7;
+        gp.clickChecker.y = MouseInfo.getPointerInfo().getLocation().y-Main.window.getLocation().y-30;
+        b.target(gp.clickChecker.x, gp.clickChecker.y);
     }
 
     public static void reload() {
@@ -64,11 +64,17 @@ public class Bullet extends Entity {
         }
         else {
             frameR++;
-            gp.click.shot = false;
+            ClickDetection.shot = false;
         }
     }
 
     public void draw(Graphics2D g2) {
+        if(!collisionOn) {
+            g2.drawImage(pew, (int) screenX, (int) screenY, gp.tileSize, gp.tileSize, null);
+        }
+    }
+
+    public void update() {
         double x = cosine * speed;
         double y = sine * speed;
         worldX += x;
@@ -78,13 +84,10 @@ public class Bullet extends Entity {
         startX = gp.player.worldX;
         startY = gp.player.worldY;
         collisionOn = false;
-        int n = gp.tileM.mapTileNum[(int)(worldX/gp.tileSize)][(int)(worldY/gp.tileSize)];
+        int n = gp.tileM.mapTileNum[(worldX/gp.tileSize)][(worldY/gp.tileSize)];
         if(gp.tileM.tile[n].collision && !gp.tileM.tile[n].flat) {
             collisionOn = true;
-            startX = 1000000;
-        }
-        if(!collisionOn) {
-            g2.drawImage(pew, (int) screenX, (int) screenY, gp.tileSize, gp.tileSize, null);
+            count = (int)(slope/speed) + 1;
         }
     }
 }

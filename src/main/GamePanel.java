@@ -1,12 +1,16 @@
 package main;
+import Enemy.Melee;
+import ai.PathFinder;
 import entity.Bullet;
+import entity.Entity;
 import entity.Player;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class GamePanel extends JPanel implements Runnable {
     //Screen Settings
@@ -24,6 +28,13 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
+    //Stuff
+    public PathFinder pFinder = new PathFinder(this);
+
+    //Entity
+    public ArrayList<Entity> entities = new ArrayList<Entity>();
+    Melee guy = new Melee(this);
+
     //Game State
     public int gameState;
     public final int titleState = 0;
@@ -36,8 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
-    public ClickDetection click = new ClickDetection();
-    public ArrayList<Bullet> chamber = new ArrayList<Bullet>();
+    public ClickDetection clickChecker = new ClickDetection();
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
@@ -48,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
-        this.addMouseListener(click);
+        this.addMouseListener(clickChecker);
         this.setFocusable(true);
     }
 
@@ -93,32 +103,76 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        //Debug
+        long drawStart = 0;
+        if(keyH.showDrawTime)
+            drawStart = System.nanoTime();
+
         if(gameState == titleState) {
             ui.draw(g2);
         }
         else {
             tileM.draw(g2);
-            player.draw(g2);
-            if (click.shooting && Bullet.ammo>0 && frameS==7) {
+
+            entities.add(player);
+            entities.add(guy);
+            if(clickChecker.click && Bullet.ammo>0 && frameS==7) {
                 Bullet shot = new Bullet(this);
                 shot.shoot(shot);
-                chamber.add(shot);
+                entities.add(shot);
                 frameS = 0;
             }
             else if(Bullet.ammo==0)
                 Bullet.reload();
-            else if(frameS != 7)
+            else if(frameS<7)
                 frameS++;
-            for(int i=0; i<chamber.size(); i++) {
-                if(chamber.get(i).count < chamber.get(i).slope / chamber.get(i).speed) {
-                    chamber.get(i).draw(g2);
-                    chamber.get(i).count++;
+            for(int i=0; i<entities.size(); i++) {
+                if(entities.get(i) instanceof Bullet) {
+                    if(((Bullet) entities.get(i)).count < ((Bullet) entities.get(i)).slope / ((Bullet) entities.get(i)).speed) {
+                        ((Bullet) entities.get(i)).update();
+                        ((Bullet) entities.get(i)).count++;
+                    }
+                    else {
+                        entities.remove(i);
+                        i--;
+                    }
                 }
-                else
-                    chamber.remove(i);
+                else if(entities.get(i) instanceof Melee) {
+                    ((Melee) entities.get(i)).update();
+                }
             }
+
+            Collections.sort(entities, new Comparator<Entity>() {
+                @Override
+                public int compare(Entity e1, Entity e2) {
+                    return Integer.compare(e1.worldY, e2.worldY);
+                }
+                @Override
+                public boolean equals(Object obj) {
+                    return false;
+                }
+            });
+
+
+            for(Entity e: entities) {
+                if (e instanceof Bullet)
+                    ((Bullet) e).draw(g2);
+                else if(e instanceof Player)
+                    ((Player) e).draw(g2);
+                else if(e instanceof Melee)
+                    ((Melee) e).draw(g2);
+            }
+            entities.remove(player);
+            entities.remove(guy);
             ui.draw(g2);
             g2.dispose();
+        }
+        if(keyH.showDrawTime) {
+            long drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+            g2.setColor(Color.RED);
+            g2.drawString("Draw Time: " + passed, 10, 500);
+            System.out.println("Draw Time: " + passed);
         }
     }
 }

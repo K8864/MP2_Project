@@ -10,14 +10,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Player extends Entity {
-    GamePanel gp;
     KeyHandler keyH;
 
     public final int screenX;
     public final int screenY;
 
     public Player(GamePanel gp, KeyHandler keyH){
-        this.gp = gp;
+        super(gp);
         this.keyH = keyH;
         setDefaultValues();
         getPlayerImage();
@@ -30,6 +29,7 @@ public class Player extends Entity {
         worldX = 1152;
         worldY = 1056;
         speed = 3;
+        maxHp = 5;
         hp = 5;
         direction = "down";
     }
@@ -42,12 +42,12 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage(){
+        down = setUp("Down");
+        down2 = setUp("Down2");
         left = setUp("Left");
         left2 = setUp("Left2");
         right = setUp("Right");
         right2 = setUp("Right2");
-        down = setUp("Down");
-        down2 = setUp("Down2");
         up = setUp("Up");
         up2 = setUp("Up2");
     }

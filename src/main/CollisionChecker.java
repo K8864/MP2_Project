@@ -2,6 +2,8 @@ package main;
 
 import entity.Entity;
 
+import java.util.ArrayList;
+
 public class CollisionChecker {
     GamePanel gp;
 
@@ -53,5 +55,14 @@ public class CollisionChecker {
                 }
                 break;
         }
+    }
+
+    public int checkEntity(Entity entity, ArrayList<Entity> target) {
+        int index = -1;
+        for(int i=0; i<target.size(); i++) {
+
+        }
+
+        return index;
     }
 }
