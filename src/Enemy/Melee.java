@@ -43,7 +43,7 @@ public class Melee extends Entity {
         BufferedImage image = null;
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/melee/" + imageName + ".png"));
-            image = uTool.scaleImage(image, getGp().tileSize, getGp().tileSize);
+            image = uTool.scaleImage(image, getGp().getTileSize(), getGp().getTileSize());
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -65,8 +65,8 @@ public class Melee extends Entity {
 
     public void chase() {
         if(!isDead()) {
-            int goalCol = (getGp().player.getWorldX() + getGp().player.getSolidArea().x) / getGp().tileSize;
-            int goalRow = (getGp().player.getWorldY() + getGp().player.getSolidArea().y) / getGp().tileSize;
+            int goalCol = (getGp().getPlayer().getWorldX() + getGp().getPlayer().getSolidArea().x) / getGp().getTileSize();
+            int goalRow = (getGp().getPlayer().getWorldY() + getGp().getPlayer().getSolidArea().y) / getGp().getTileSize();
             searchPath(goalCol, goalRow);
         }
     }
@@ -77,7 +77,7 @@ public class Melee extends Entity {
             checkCollision();
             chase();
             setCollisionOn(false);
-            getGp().cChecker.checkTile(this);
+            getGp().getcChecker().checkTile(this);
 
             if (!isCollisionOn()) {
                 if (getDirection().equals("up"))
@@ -90,9 +90,9 @@ public class Melee extends Entity {
                     setWorldX(getWorldX()+speed);
             }
 
-            if (Math.abs(getWorldX() - getGp().player.getWorldX()) < 36 && Math.abs(getWorldY() - getGp().player.getWorldY()) < 48) {
+            if (Math.abs(getWorldX() - getGp().getPlayer().getWorldX()) < 36 && Math.abs(getWorldY() - getGp().getPlayer().getWorldY()) < 48) {
                 if (Player.getHitCoolDown() >= 90) {
-                    getGp().player.hp--;
+                    getGp().getPlayer().hp--;
                     Player.setHitCoolDown(0);
                 }
             }
@@ -119,8 +119,8 @@ public class Melee extends Entity {
 
     public void draw(Graphics2D g2) {
         if(!isDead()) {
-            int screenX = getWorldX() - getGp().player.getWorldX() + getGp().player.getScreenX();
-            int screenY = getWorldY() - getGp().player.getWorldY() + getGp().player.getScreenY();
+            int screenX = getWorldX() - getGp().getPlayer().getWorldX() + getGp().getPlayer().getScreenX();
+            int screenY = getWorldY() - getGp().getPlayer().getWorldY() + getGp().getPlayer().getScreenY();
             BufferedImage image = null;
             switch (getDirection()) {
                 case "up":
@@ -149,7 +149,7 @@ public class Melee extends Entity {
                     break;
             }
 
-            g2.drawImage(image, screenX, screenY, getGp().tileSize, getGp().tileSize, null);
+            g2.drawImage(image, screenX, screenY, getGp().getTileSize(), getGp().getTileSize(), null);
         }
     }
 

@@ -14,45 +14,58 @@ import java.util.Comparator;
 
 public class GamePanel extends JPanel implements Runnable {
     //Screen Settings
-    final int originalTileSize = 16; // 16 x 16 tiles (default sizes for things)
-    final int scale = 3;
-    public final int tileSize = originalTileSize * scale; // 48 x 48 tile size
-    public final int maxScreenCol = 20;
-    public final int maxScreenRow = 12;
-    public final int screenWidth = tileSize * maxScreenCol; // 960 pixels
-    public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+    private final int originalTileSize = 16; // 16 x 16 tiles (default sizes for things)
+    private final int scale = 3;
+    private final int tileSize = originalTileSize * scale; // 48 x 48 tile size
+    public int getTileSize() {return tileSize;}
+    private final int maxScreenCol = 20;
+    private final int maxScreenRow = 12;
+    private final int screenWidth = tileSize * maxScreenCol; // 960 pixels
+    public int getScreenWidth() {return screenWidth;}
+    private final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+    public int getScreenHeight() {return screenHeight;}
 
     //World settings
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
+    private final int maxWorldCol = 50;
+    public int getMaxWorldCol() {return maxWorldCol;}
+    private final int maxWorldRow = 50;
+    public int getMaxWorldRow(){return maxWorldRow;}
 
     //Stuff
-    public PathFinder pFinder = new PathFinder(this);
+    private final PathFinder pFinder = new PathFinder(this);
+    public PathFinder getpFinder() {return pFinder;}
 
     //Entity
-    public ArrayList<Entity> entities = new ArrayList<Entity>();
+    private ArrayList<Entity> entities = new ArrayList<Entity>();
 
     //Game State
-    public int gameState;
-    public final int titleState = 0;
-    public final int playState = 1;
-    public final int deadState = 2;
+    private int gameState;
+    public int getGameState() {return gameState;}
+    public void setGameState(int g) {gameState = g;}
+    private final int titleState = 0;
+    public int getTitleState() {return titleState;}
+    private final int playState = 1;
+    public int getPlayState() {return playState;}
+    private final int deadState = 2;
+    public int getDeadState() {return deadState;}
 
     //FPS
-    int FPS = 60;
+    private final int FPS = 60;
 
-    public int frameS = 0;
+    private int frameS = 0;
     private int frame = 0;
 
-    public TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler();
-    public ClickDetection clickChecker = new ClickDetection();
-    Thread gameThread;
-    public CollisionChecker cChecker = new CollisionChecker(this);
-    public Player player = new Player(this, keyH);
-    public UI ui = new UI(this);
+    private final TileManager tileM = new TileManager(this);
+    public TileManager getTileM() {return tileM;}
+    private final KeyHandler keyH = new KeyHandler();
+    private final ClickDetection clickChecker = new ClickDetection();
+    public ClickDetection getClickChecker() {return clickChecker;}
+    private Thread gameThread;
+    private CollisionChecker cChecker = new CollisionChecker(this);
+    public CollisionChecker getcChecker() {return cChecker;}
+    private final Player player = new Player(this, keyH);
+    public Player getPlayer() {return player;}
+    private final UI ui = new UI(this);
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));

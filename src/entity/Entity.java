@@ -162,31 +162,31 @@ public class Entity {
 
     public void checkCollision() {
         collisionOn = false;
-        gp.cChecker.checkTile(this);
+        gp.getcChecker().checkTile(this);
     }
 
     public void searchPath(int goalCol, int goalRow) {
-        int startCol = (worldX + solidArea.x)/gp.tileSize;
-        int startRow = (worldY + solidArea.y)/gp.tileSize;
+        int startCol = (worldX + solidArea.x)/gp.getTileSize();
+        int startRow = (worldY + solidArea.y)/gp.getTileSize();
 
-        gp.pFinder.setNode(startCol, startRow, goalCol, goalRow);
+        gp.getpFinder().setNode(startCol, startRow, goalCol, goalRow);
 
-        if(gp.pFinder.search()) {
-            int nextX = gp.pFinder.getPathList().get(0).getCol() * gp.tileSize;
-            int nextY = gp.pFinder.getPathList().get(0).getRow() * gp.tileSize;
+        if(gp.getpFinder().search()) {
+            int nextX = gp.getpFinder().getPathList().get(0).getCol() * gp.getTileSize();
+            int nextY = gp.getpFinder().getPathList().get(0).getRow() * gp.getTileSize();
 
             int enLeftX = worldX + solidArea.x;
             int enRightX = worldX + solidArea.x + solidArea.width;
             int enTopY = worldY + solidArea.y;
             int enBottomY = worldY + solidArea.y + solidArea.height;
 
-            if(enTopY > nextY && enLeftX > nextX && enRightX < nextX + gp.tileSize) {
+            if(enTopY > nextY && enLeftX > nextX && enRightX < nextX + gp.getTileSize()) {
                 direction = "up";
             }
-            else if(enTopY < nextY && enLeftX < nextX && enRightX > nextX + gp.tileSize) {
+            else if(enTopY < nextY && enLeftX < nextX && enRightX > nextX + gp.getTileSize()) {
                 direction = "down";
             }
-            else if(enTopY > nextY && enBottomY < nextY + gp.tileSize) {
+            else if(enTopY > nextY && enBottomY < nextY + gp.getTileSize()) {
                 if(enLeftX >= nextX) {
                     direction = "left";
                 }
@@ -230,14 +230,14 @@ public class Entity {
     }
 
     public void draw(Graphics2D g2) {
-        int screenX = worldX - gp.player.getWorldX() + gp.player.getScreenX();
-        int screenY = worldY - gp.player.getWorldY() + gp.player.getScreenY();
+        int screenX = worldX - gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX();
+        int screenY = worldY - gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY();
         BufferedImage image = null;
 
-        if(worldX + gp.tileSize > gp.player.getWorldX() - gp.player.getScreenX() &&
-                worldX - gp.tileSize < gp.player.getWorldX() + gp.player.getScreenX() &&
-                worldY + gp.tileSize > gp.player.getWorldY() - gp.player.getScreenY() &&
-                worldY - gp.tileSize < gp.player.getWorldY() + gp.player.getScreenY()) {
+        if(worldX + gp.getTileSize() > gp.getPlayer().getWorldX() - gp.getPlayer().getScreenX() &&
+                worldX - gp.getTileSize() < gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX() &&
+                worldY + gp.getTileSize() > gp.getPlayer().getWorldY() - gp.getPlayer().getScreenY() &&
+                worldY - gp.getTileSize() < gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY()) {
 
             switch(direction) {
                 case "up":
@@ -266,7 +266,7 @@ public class Entity {
                     break;
             }
 
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            g2.drawImage(image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
         }
     }
 }

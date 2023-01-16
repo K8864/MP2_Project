@@ -22,13 +22,13 @@ public class Bullet extends Entity {
         super(gp);
         getBulletImage();
         //worldX = gp.player.worldX;
-        setWorldX(getGp().player.getWorldX());
+        setWorldX(getGp().getPlayer().getWorldX());
         //worldY = gp.player.worldY;
-        setWorldY(getGp().player.getWorldY());
-        screenX = gp.player.getScreenX();
-        screenY = gp.player.getScreenY();
-        startX = gp.player.getWorldX();
-        startY = gp.player.getWorldY();
+        setWorldY(getGp().getPlayer().getWorldY());
+        screenX = gp.getPlayer().getScreenX();
+        screenY = gp.getPlayer().getScreenY();
+        startX = gp.getPlayer().getWorldX();
+        startY = gp.getPlayer().getWorldY();
     }
 
     public void getBulletImage() {
@@ -68,12 +68,12 @@ public class Bullet extends Entity {
     }
 
     public void target(int x, int y) {
-        screenX = getGp().player.getScreenX();
-        screenY = getGp().player.getScreenY();
-        startX = getGp().player.getWorldX();
-        startY = getGp().player.getWorldY();
-        endX = getGp().player.getWorldX() - getGp().player.getScreenX() + x-24;
-        endY = getGp().player.getWorldY() - getGp().player.getScreenY() + y-24;
+        screenX = getGp().getPlayer().getScreenX();
+        screenY = getGp().getPlayer().getScreenY();
+        startX = getGp().getPlayer().getWorldX();
+        startY = getGp().getPlayer().getWorldY();
+        endX = getGp().getPlayer().getWorldX() - getGp().getPlayer().getScreenX() + x-24;
+        endY = getGp().getPlayer().getWorldY() - getGp().getPlayer().getScreenY() + y-24;
         slope = Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
         cosine = (endX - startX)/slope;
         sine = (endY - startY)/slope;
@@ -99,7 +99,7 @@ public class Bullet extends Entity {
 
     public void draw(Graphics2D g2) {
         if(!isCollisionOn()) {
-            g2.drawImage(pew, (int) screenX, (int) screenY, getGp().tileSize, getGp().tileSize, null);
+            g2.drawImage(pew, (int) screenX, (int) screenY, getGp().getTileSize(), getGp().getTileSize(), null);
         }
     }
 
@@ -111,13 +111,13 @@ public class Bullet extends Entity {
             setWorldX(getWorldX()+(int)x);
             //worldY += y;
             setWorldY(getWorldY()+(int)y);
-            screenX += x + (startX - getGp().player.getWorldX());
-            screenY += y + (startY - getGp().player.getWorldY());
-            startX = getGp().player.getWorldX();
-            startY = getGp().player.getWorldY();
+            screenX += x + (startX - getGp().getPlayer().getWorldX());
+            screenY += y + (startY - getGp().getPlayer().getWorldY());
+            startX = getGp().getPlayer().getWorldX();
+            startY = getGp().getPlayer().getWorldY();
             setCollisionOn(false);
-            int n = getGp().tileM.mapTileNum[((getWorldX() + 24) / getGp().tileSize)][((getWorldY() + 24) / getGp().tileSize)];
-            if (getGp().tileM.tile[n].collision && !getGp().tileM.tile[n].flat) {
+            int n = getGp().getTileM().mapTileNum[((getWorldX() + 24) / getGp().getTileSize())][((getWorldY() + 24) / getGp().getTileSize())];
+            if (getGp().getTileM().tile[n].isCollision() && !getGp().getTileM().tile[n].isFlat()) {
                 setCollisionOn(true);
                 count = (int) (slope / speed) + 1;
             }

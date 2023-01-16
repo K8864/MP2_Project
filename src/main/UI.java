@@ -19,35 +19,35 @@ public class UI {
         this.g2 = g2;
         g2.setFont(font);
         g2.setColor(Color.orange);
-        if(gp.gameState == gp.titleState) {
+        if(gp.getGameState() == gp.getTitleState()) {
             drawTitleScreen();
         }
-        else if(gp.gameState == gp.playState) {
+        else if(gp.getGameState() == gp.getPlayState()) {
             if(Bullet.getAmmo() != 0)
-                g2.drawString("Ammo = " + Bullet.getAmmo(), 25, gp.screenHeight-50);
+                g2.drawString("Ammo = " + Bullet.getAmmo(), 25, gp.getScreenHeight()-50);
             else {
-                g2.drawString("Reloading...", 25, gp.screenHeight-50);
+                g2.drawString("Reloading...", 25, gp.getScreenHeight()-50);
             }
-            if(gp.player.hp > 0) {
+            if(gp.getPlayer().hp > 0) {
                 g2.setColor(Color.RED);
-                g2.fillRect(25, 50, gp.player.hp * (gp.tileSize), gp.tileSize);
+                g2.fillRect(25, 50, gp.getPlayer().hp * (gp.getTileSize()), gp.getTileSize());
             }
             g2.setColor(Color.BLACK);
-            g2.drawRect(25, 50, gp.player.maxHp * (gp.tileSize), gp.tileSize);
+            g2.drawRect(25, 50, gp.getPlayer().maxHp * (gp.getTileSize()), gp.getTileSize());
         }
-        if(gp.gameState == gp.deadState){
+        if(gp.getGameState() == gp.getDeadState()){
             drawDeadScreen();
         }
     }
 
     public void drawDeadScreen() {
         g2.setColor(new Color(0, 0, 0, 150));
-        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
         g2.setColor(Color.BLACK);
         String text = "Haha Ded";
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110F));
         int x = centerX(text);
-        int y = gp.screenHeight/2;
+        int y = gp.getScreenHeight()/2;
         g2.drawString(text, x, y);
     }
 
@@ -55,7 +55,7 @@ public class UI {
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F));
         String text = "Purged";
         int x = centerX(text);
-        int y = gp.tileSize*3;
+        int y = gp.getTileSize()*3;
 
         g2.setColor(Color.GRAY);
         g2.drawString(text, x+5, y+5);
@@ -66,39 +66,39 @@ public class UI {
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F));
         text = "Play";
         x = centerX(text);
-        y = gp.tileSize*7;
+        y = gp.getTileSize()*7;
         if(play)
             g2.drawString(text, x, y);
         if(commandNum == 0) {
             g2.setColor(Color.GRAY);
-            g2.drawRect(x-gp.tileSize, y-gp.tileSize, (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth()*2, gp.tileSize+16);
+            g2.drawRect(x-gp.getTileSize(), y-gp.getTileSize(), (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth()*2, gp.getTileSize()+16);
             g2.setColor(Color.WHITE);
         }
 
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F));
         text = "Don't Play";
         x = centerX(text);
-        y = (int)(gp.tileSize*8.5);
+        y = (int)(gp.getTileSize()*8.5);
         g2.drawString(text, x, y);
         if(commandNum == 1) {
             g2.setColor(Color.GRAY);
-            g2.drawRect(x-gp.tileSize, y-gp.tileSize, (int)(g2.getFontMetrics().getStringBounds(text, g2).getWidth()*1.5), gp.tileSize+16);
+            g2.drawRect(x-gp.getTileSize(), y-gp.getTileSize(), (int)(g2.getFontMetrics().getStringBounds(text, g2).getWidth()*1.5), gp.getTileSize()+16);
         }
     }
 
     public int centerX(String text) {
         int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-        int x = gp.screenWidth/2 - length/2;
+        int x = gp.getScreenWidth()/2 - length/2;
         return x;
     }
 
     public void update() {
-        if(ClickDetection.getY() >= gp.tileSize*7 - (gp.tileSize+16) && ClickDetection.getY() <= gp.tileSize*6 + (gp.tileSize+16) && play) {
+        if(ClickDetection.getY() >= gp.getTileSize()*7 - (gp.getTileSize()+16) && ClickDetection.getY() <= gp.getTileSize()*6 + (gp.getTileSize()+16) && play) {
             commandNum = 0;
             if(ClickDetection.getClick())
-                gp.gameState = gp.playState;
+                gp.setGameState(gp.getPlayState());
         }
-        else if(ClickDetection.getY() >= gp.tileSize*8.5 - (gp.tileSize+16) && ClickDetection.getY() <= gp.tileSize*7.5 + (gp.tileSize+16)) {
+        else if(ClickDetection.getY() >= gp.getTileSize()*8.5 - (gp.getTileSize()+16) && ClickDetection.getY() <= gp.getTileSize()*7.5 + (gp.getTileSize()+16)) {
             commandNum = 1;
             if(ClickDetection.getClick())
                 play = false;

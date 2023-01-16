@@ -18,41 +18,41 @@ public class CollisionChecker {
         int entityRightWorldX = entity.getWorldX() + entity.getSolidArea().x + entity.getSolidArea().width;
         int entityTopWorldY = entity.getWorldY() + entity.getSolidArea().y;
         int entityBottomWorldY = entity.getWorldY() + entity.getSolidArea().y + entity.getSolidArea().height;
-        int entityLeftCol = entityLeftWorldX / gp.tileSize;
-        int entityRightCol = entityRightWorldX / gp.tileSize;
-        int entityTopRow = entityTopWorldY / gp.tileSize;
-        int entityBottomRow = entityBottomWorldY / gp.tileSize;
+        int entityLeftCol = entityLeftWorldX / gp.getTileSize();
+        int entityRightCol = entityRightWorldX / gp.getTileSize();
+        int entityTopRow = entityTopWorldY / gp.getTileSize();
+        int entityBottomRow = entityBottomWorldY / gp.getTileSize();
         int tileNum1, tileNum2;
         switch(entity.getDirection()) {
             case "up":
-                entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
-                tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-                tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
-                if(gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                entityTopRow = (entityTopWorldY - entity.speed) / gp.getTileSize();
+                tileNum1 = gp.getTileM().mapTileNum[entityLeftCol][entityTopRow];
+                tileNum2 = gp.getTileM().mapTileNum[entityRightCol][entityTopRow];
+                if(gp.getTileM().tile[tileNum1].isCollision() || gp.getTileM().tile[tileNum2].isCollision()) {
                     entity.setCollisionOn(true);
                 }
                 break;
             case "down":
-                entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
-                tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
-                tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
-                if(gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                entityBottomRow = (entityBottomWorldY + entity.speed) / gp.getTileSize();
+                tileNum1 = gp.getTileM().mapTileNum[entityLeftCol][entityBottomRow];
+                tileNum2 = gp.getTileM().mapTileNum[entityRightCol][entityBottomRow];
+                if(gp.getTileM().tile[tileNum1].isCollision() || gp.getTileM().tile[tileNum2].isCollision()) {
                     entity.setCollisionOn(true);
                 }
                 break;
             case "left":
-                entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
-                tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-                tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
-                if(gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                entityLeftCol = (entityLeftWorldX - entity.speed) / gp.getTileSize();
+                tileNum1 = gp.getTileM().mapTileNum[entityLeftCol][entityTopRow];
+                tileNum2 = gp.getTileM().mapTileNum[entityLeftCol][entityBottomRow];
+                if(gp.getTileM().tile[tileNum1].isCollision() || gp.getTileM().tile[tileNum2].isCollision()) {
                     entity.setCollisionOn(true);
                 }
                 break;
             case "right":
-                entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
-                tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
-                tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
-                if(gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                entityRightCol = (entityRightWorldX + entity.speed) / gp.getTileSize();
+                tileNum1 = gp.getTileM().mapTileNum[entityRightCol][entityTopRow];
+                tileNum2 = gp.getTileM().mapTileNum[entityRightCol][entityBottomRow];
+                if(gp.getTileM().tile[tileNum1].isCollision() || gp.getTileM().tile[tileNum2].isCollision()) {
                     entity.setCollisionOn(true);
                 }
                 break;

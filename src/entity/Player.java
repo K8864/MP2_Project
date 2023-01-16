@@ -23,8 +23,8 @@ public class Player extends Entity {
         setDefaultValues();
         getPlayerImage();
         setSolidArea(new Rectangle(15, 21, 17, 24)); // 16, 21, 16, 24
-        screenX = gp.screenWidth/2 - gp.tileSize/2;
-        screenY = gp.screenHeight/2 - gp.tileSize/2;
+        screenX = gp.getScreenWidth()/2 - gp.getTileSize()/2;
+        screenY = gp.getScreenHeight()/2 - gp.getTileSize()/2;
     }
 
     public void setDefaultValues() {
@@ -68,7 +68,7 @@ public class Player extends Entity {
         BufferedImage image = null;
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
-            image = uTool.scaleImage(image, getGp().tileSize, getGp().tileSize);
+            image = uTool.scaleImage(image, getGp().getTileSize(), getGp().getTileSize());
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -77,7 +77,7 @@ public class Player extends Entity {
     }
 
     public void update() {
-        if(getGp().clickChecker.getClick()) {
+        if(getGp().getClickChecker().getClick()) {
             speed = 2;
         }
         else {
@@ -99,7 +99,7 @@ public class Player extends Entity {
             }
             // Check tile collision
             setCollisionOn(false);
-            getGp().cChecker.checkTile(this);
+            getGp().getcChecker().checkTile(this);
             // if collision is off, player can move
             if (!isCollisionOn()) {
                 switch (getDirection()) {
