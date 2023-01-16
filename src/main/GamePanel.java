@@ -33,17 +33,18 @@ public class GamePanel extends JPanel implements Runnable {
 
     //Entity
     public ArrayList<Entity> entities = new ArrayList<Entity>();
-    Melee guy = new Melee(this);
 
     //Game State
     public int gameState;
     public final int titleState = 0;
     public final int playState = 1;
+    public final int deadState = 2;
 
     //FPS
     int FPS = 60;
 
     public int frameS = 0;
+    private int frame = 0;
 
     public TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
@@ -93,11 +94,16 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
+        ClickDetection.update();
         if(gameState == titleState) {
             ui.update();
         }
-        else
+        else if(gameState == playState){
             player.update();
+            if(player.hp == 0) {
+                gameState = deadState;
+            }
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -115,64 +121,73 @@ public class GamePanel extends JPanel implements Runnable {
             tileM.draw(g2);
 
             entities.add(player);
-            entities.add(guy);
-            if(clickChecker.click && Bullet.ammo>0 && frameS==7) {
-                Bullet shot = new Bullet(this);
-                shot.shoot(shot);
-                entities.add(shot);
-                frameS = 0;
+            if(frame % 300 == 0) {
+                Melee killer = Melee.spawn(this);
+                entities.add(killer);
             }
-            else if(Bullet.ammo==0)
-                Bullet.reload();
-            else if(frameS<7)
-                frameS++;
-            for(int i=0; i<entities.size(); i++) {
-                if(entities.get(i) instanceof Bullet) {
-                    if(((Bullet) entities.get(i)).count < ((Bullet) entities.get(i)).slope / ((Bullet) entities.get(i)).speed) {
-                        ((Bullet) entities.get(i)).update();
-                        ((Bullet) entities.get(i)).count++;
-                    }
-                    else {
-                        entities.remove(i);
-                        i--;
+            if (gameState == playState) {
+                if (clickChecker.getClick() && Bullet.getAmmo() > 0 && frameS == 7) {
+                    Bullet shot = new Bullet(this);
+                    shot.shoot(shot);
+                    entities.add(shot);
+                    frameS = 0;
+                } else if (Bullet.getAmmo() == 0)
+                    Bullet.reload();
+                else if (frameS < 7)
+                    frameS++;
+                for (int i = 0; i < entities.size(); i++) {
+                    if (entities.get(i) instanceof Bullet) {
+                        if (((Bullet) entities.get(i)).getCount() < ((Bullet) entities.get(i)).getSlope() / ((Bullet) entities.get(i)).getSpeed()) {
+                            ((Bullet) entities.get(i)).update();
+                            ((Bullet) entities.get(i)).setCount(((Bullet) entities.get(i)).getCount()+1);
+                            if(cChecker.checkHit(((Bullet) entities.get(i)), entities) != -1) {
+                                int j = cChecker.checkHit(((Bullet) entities.get(i)), entities);
+                                entities.get(j).hp--;
+                                entities.remove(i);
+                            }
+                        } else {
+                            entities.remove(i);
+                            i--;
+                        }
+                    } else if (entities.get(i) instanceof Melee) {
+                        ((Melee) entities.get(i)).update();
                     }
                 }
-                else if(entities.get(i) instanceof Melee) {
-                    ((Melee) entities.get(i)).update();
-                }
+
+                Collections.sort(entities, new Comparator<Entity>() {
+                    @Override
+                    public int compare(Entity e1, Entity e2) {
+                        return Integer.compare(e1.getWorldX(), e2.getWorldY());
+                    }
+
+                    @Override
+                    public boolean equals(Object obj) {
+                        return false;
+                    }
+                });
             }
-
-            Collections.sort(entities, new Comparator<Entity>() {
-                @Override
-                public int compare(Entity e1, Entity e2) {
-                    return Integer.compare(e1.worldY, e2.worldY);
-                }
-                @Override
-                public boolean equals(Object obj) {
-                    return false;
-                }
-            });
-
 
             for(Entity e: entities) {
                 if (e instanceof Bullet)
-                    ((Bullet) e).draw(g2);
+                    e.draw(g2);
                 else if(e instanceof Player)
-                    ((Player) e).draw(g2);
+                    e.draw(g2);
                 else if(e instanceof Melee)
-                    ((Melee) e).draw(g2);
+                    e.draw(g2);
             }
             entities.remove(player);
-            entities.remove(guy);
             ui.draw(g2);
+            if(keyH.showDrawTime) {
+                g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 36F));
+                long drawEnd = System.nanoTime();
+                long passed = drawEnd - drawStart;
+                g2.setColor(Color.RED);
+                g2.drawString("Draw Time: " + passed, 10, 500);
+                System.out.println("Draw Time: " + passed);
+                player.hp = 5;
+            }
             g2.dispose();
         }
-        if(keyH.showDrawTime) {
-            long drawEnd = System.nanoTime();
-            long passed = drawEnd - drawStart;
-            g2.setColor(Color.RED);
-            g2.drawString("Draw Time: " + passed, 10, 500);
-            System.out.println("Draw Time: " + passed);
-        }
+        frame++;
     }
 }

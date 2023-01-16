@@ -1,12 +1,42 @@
 package main;
 
+import java.awt.*;
 import java.awt.event.*;
 
 public class ClickDetection implements MouseListener {
-    public int x = 0;
-    public int y = 0;
-    public static boolean shot = false;
-    public boolean click = false;
+    private static int x = 0;
+    private static int y = 0;
+    private static boolean shot = false;
+    private static boolean click = false;
+
+    public static void update() {
+        x = MouseInfo.getPointerInfo().getLocation().x- Main.window.getLocation().x-7;
+        y = MouseInfo.getPointerInfo().getLocation().y-Main.window.getLocation().y-30;
+    }
+
+    public static int getX() {
+        return x;
+    }
+
+    public static int getY() {
+        return y;
+    }
+
+    public static boolean getClick() {
+        return click;
+    }
+
+    public static void setClick(boolean c) {
+        click = c;
+    }
+
+    public static boolean getShot() {
+        return shot;
+    }
+
+    public static void setShot(boolean s) {
+        shot = s;
+    }
 
     public ClickDetection() {
 

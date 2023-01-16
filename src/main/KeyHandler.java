@@ -30,7 +30,7 @@ public class KeyHandler implements KeyListener {
             rightPressed = true;
         }
         if(code == KeyEvent.VK_R) {
-            Bullet.ammo = 0;
+            Bullet.setAmmo(0);
         }
         if(code == KeyEvent.VK_X) {
             if(!showDrawTime)

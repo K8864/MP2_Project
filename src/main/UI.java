@@ -5,11 +5,11 @@ import entity.Bullet;
 import java.awt.*;
 
 public class UI {
-    GamePanel gp;
-    Font font;
-    Graphics2D g2;
-    public int commandNum = 2;
-    boolean play = true;
+    private GamePanel gp;
+    private Font font;
+    private Graphics2D g2;
+    private int commandNum = 2;
+    private boolean play = true;
     public UI(GamePanel gp) {
         this.gp = gp;
         font = new Font("Arial", Font.PLAIN, 30);
@@ -22,13 +22,33 @@ public class UI {
         if(gp.gameState == gp.titleState) {
             drawTitleScreen();
         }
-        else{
-            if(Bullet.ammo != 0)
-                g2.drawString("Ammo = " + Bullet.ammo, 25, 50);
+        else if(gp.gameState == gp.playState) {
+            if(Bullet.getAmmo() != 0)
+                g2.drawString("Ammo = " + Bullet.getAmmo(), 25, gp.screenHeight-50);
             else {
-                g2.drawString("Reloading...", 25, 50);
+                g2.drawString("Reloading...", 25, gp.screenHeight-50);
             }
+            if(gp.player.hp > 0) {
+                g2.setColor(Color.RED);
+                g2.fillRect(25, 50, gp.player.hp * (gp.tileSize), gp.tileSize);
+            }
+            g2.setColor(Color.BLACK);
+            g2.drawRect(25, 50, gp.player.maxHp * (gp.tileSize), gp.tileSize);
         }
+        if(gp.gameState == gp.deadState){
+            drawDeadScreen();
+        }
+    }
+
+    public void drawDeadScreen() {
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        g2.setColor(Color.BLACK);
+        String text = "Haha Ded";
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110F));
+        int x = centerX(text);
+        int y = gp.screenHeight/2;
+        g2.drawString(text, x, y);
     }
 
     public void drawTitleScreen() {
@@ -73,16 +93,14 @@ public class UI {
     }
 
     public void update() {
-        gp.clickChecker.x = MouseInfo.getPointerInfo().getLocation().x- Main.window.getLocation().x-7;
-        gp.clickChecker.y = MouseInfo.getPointerInfo().getLocation().y-Main.window.getLocation().y-30;
-        if(gp.clickChecker.y >= gp.tileSize*7 - (gp.tileSize+16) && gp.clickChecker.y <= gp.tileSize*6 + (gp.tileSize+16) && play) {
+        if(ClickDetection.getY() >= gp.tileSize*7 - (gp.tileSize+16) && ClickDetection.getY() <= gp.tileSize*6 + (gp.tileSize+16) && play) {
             commandNum = 0;
-            if(gp.clickChecker.click)
+            if(ClickDetection.getClick())
                 gp.gameState = gp.playState;
         }
-        else if(gp.clickChecker.y >= gp.tileSize*8.5 - (gp.tileSize+16) && gp.clickChecker.y <= gp.tileSize*7.5 + (gp.tileSize+16)) {
+        else if(ClickDetection.getY() >= gp.tileSize*8.5 - (gp.tileSize+16) && ClickDetection.getY() <= gp.tileSize*7.5 + (gp.tileSize+16)) {
             commandNum = 1;
-            if(gp.clickChecker.click)
+            if(ClickDetection.getClick())
                 play = false;
         }
         else commandNum = 2;

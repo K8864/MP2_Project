@@ -12,6 +12,8 @@ import java.io.IOException;
 public class Player extends Entity {
     KeyHandler keyH;
 
+    public static int hitCoolDown = 90;
+
     public final int screenX;
     public final int screenY;
 
@@ -26,19 +28,12 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        worldX = 1152;
-        worldY = 1056;
+        setWorldX(1152);
+        setWorldY(1008);
         speed = 3;
         maxHp = 5;
         hp = 5;
         direction = "down";
-    }
-
-    public int getWorldX() {
-        return worldX;
-    }
-    public int getWorldY() {
-        return worldY;
     }
 
     public void getPlayerImage(){
@@ -57,7 +52,7 @@ public class Player extends Entity {
         BufferedImage image = null;
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            image = uTool.scaleImage(image, getGp().tileSize, getGp().tileSize);
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -66,6 +61,12 @@ public class Player extends Entity {
     }
 
     public void update() {
+        if(getGp().clickChecker.getClick()) {
+            speed = 2;
+        }
+        else {
+            speed = 3;
+        }
         if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {
                 direction = "up";
@@ -82,21 +83,21 @@ public class Player extends Entity {
             }
             // Check tile collision
             collisionOn = false;
-            gp.cChecker.checkTile(this);
+            getGp().cChecker.checkTile(this);
             // if collision is off, player can move
             if (!collisionOn) {
                 switch (direction) {
                     case "up":
-                        worldY -= speed;
+                        setWorldY(getWorldY()-speed);
                         break;
                     case "down":
-                        worldY += speed;
+                        setWorldY(getWorldY()+speed);
                         break;
                     case "left":
-                        worldX -= speed;
+                        setWorldX(getWorldX()-speed);
                         break;
                     case "right":
-                        worldX += speed;
+                        setWorldX(getWorldX()+speed);
                         break;
                 }
             }
@@ -109,6 +110,8 @@ public class Player extends Entity {
                     spriteCounter = 0;
                 }
         }
+        hitCoolDown++;
+
     }
 
     public void draw(Graphics2D g2) {

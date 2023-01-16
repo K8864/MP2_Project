@@ -6,14 +6,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Entity {
-    public GamePanel gp;
-    public int worldX, worldY;
+    private GamePanel gp;
+    private int worldX, worldY;
     public BufferedImage left, left2, down, down2, right, right2, up, up2;
     public String direction;
     public int spriteCounter = 0;
     public int spriteNum = 1;
     public Rectangle solidArea;
     public boolean collisionOn = false;
+    public boolean dead = false;
 
     public int hp;
     public int maxHp;
@@ -23,6 +24,26 @@ public class Entity {
 
     public Entity(GamePanel gp) {
         this.gp = gp;
+    }
+
+    public GamePanel getGp() {
+        return gp;
+    }
+
+    public int getWorldX() {
+        return worldX;
+    }
+
+    public void setWorldX(int x) {
+        worldX = x;
+    }
+
+    public int getWorldY() {
+        return worldY;
+    }
+
+    public void setWorldY(int y) {
+        worldY = y;
     }
 
     public void checkCollision() {
@@ -45,17 +66,17 @@ public class Entity {
             int enTopY = worldY + solidArea.y;
             int enBottomY = worldY + solidArea.y + solidArea.height;
 
-            if(enTopY > nextY && enLeftX >= nextX && enRightX < nextX + gp.tileSize) {
+            if(enTopY > nextY && enLeftX > nextX && enRightX < nextX + gp.tileSize) {
                 direction = "up";
             }
-            else if(enTopY < nextY && enLeftX <= nextX && enRightX > nextX + gp.tileSize) {
+            else if(enTopY < nextY && enLeftX < nextX && enRightX > nextX + gp.tileSize) {
                 direction = "down";
             }
-            else if(enTopY >= nextY && enBottomY < nextY + gp.tileSize) {
-                if(enLeftX > nextX) {
+            else if(enTopY > nextY && enBottomY < nextY + gp.tileSize) {
+                if(enLeftX >= nextX) {
                     direction = "left";
                 }
-                if(enLeftX < nextX) {
+                if(enLeftX <= nextX) {
                     direction = "right";
                 }
             }
@@ -87,18 +108,22 @@ public class Entity {
                     direction = "right";
                 }
             }
+            else if(enTopY < nextY)
+                direction = "down";
+            else if(enBottomY > nextY)
+                direction = "up";
         }
     }
 
     public void draw(Graphics2D g2) {
-        int screenX = worldX - gp.player.worldX + gp.player.screenX;
-        int screenY = worldY - gp.player.worldY + gp.player.screenY;
+        int screenX = worldX - gp.player.getWorldX() + gp.player.screenX;
+        int screenY = worldY - gp.player.getWorldY() + gp.player.screenY;
         BufferedImage image = null;
 
-        if(worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
-                worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-                worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
-                worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+        if(worldX + gp.tileSize > gp.player.getWorldX() - gp.player.screenX &&
+                worldX - gp.tileSize < gp.player.getWorldX() + gp.player.screenX &&
+                worldY + gp.tileSize > gp.player.getWorldY() - gp.player.screenY &&
+                worldY - gp.tileSize < gp.player.getWorldY() + gp.player.screenY) {
 
             switch(direction) {
                 case "up":

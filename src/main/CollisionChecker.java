@@ -1,6 +1,8 @@
 package main;
 
+import entity.Bullet;
 import entity.Entity;
+import Enemy.Melee;
 
 import java.util.ArrayList;
 
@@ -12,10 +14,10 @@ public class CollisionChecker {
     }
 
     public void checkTile(Entity entity) {
-        int entityLeftWorldX = entity.worldX + entity.solidArea.x;
-        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
-        int entityTopWorldY = entity.worldY + entity.solidArea.y;
-        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
+        int entityLeftWorldX = entity.getWorldX() + entity.solidArea.x;
+        int entityRightWorldX = entity.getWorldX() + entity.solidArea.x + entity.solidArea.width;
+        int entityTopWorldY = entity.getWorldY() + entity.solidArea.y;
+        int entityBottomWorldY = entity.getWorldY() + entity.solidArea.y + entity.solidArea.height;
         int entityLeftCol = entityLeftWorldX / gp.tileSize;
         int entityRightCol = entityRightWorldX / gp.tileSize;
         int entityTopRow = entityTopWorldY / gp.tileSize;
@@ -57,12 +59,16 @@ public class CollisionChecker {
         }
     }
 
-    public int checkEntity(Entity entity, ArrayList<Entity> target) {
+    public int checkHit(Bullet b, ArrayList<Entity> target) {
         int index = -1;
         for(int i=0; i<target.size(); i++) {
-
+            if(target.get(i) instanceof Melee) {
+                if(Math.abs(b.getWorldX() - target.get(i).getWorldX()) < target.get(i).solidArea.width && Math.abs(b.getWorldY()-target.get(i).getWorldY()) < target.get(i).solidArea.height) {
+                    index = i;
+                    break;
+                }
+            }
         }
-
         return index;
     }
 }
