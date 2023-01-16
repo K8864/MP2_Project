@@ -19,23 +19,23 @@ public class Melee extends Entity {
         speed = 3;
         maxHp = 10;
         hp = 10;
-        solidArea = new Rectangle(15, 21, 24, 36);
+        setSolidArea(new Rectangle(15, 21, 24, 36));
         getEnemyImage();
-        direction = "down";
+        setDirection("down");
         setWorldX(x);
         setWorldY(y);
-        collisionOn = false;
+        setCollisionOn(false);
     }
 
     public void getEnemyImage(){
-        down = setUp("Down");
-        down2 = setUp("Down2");
-        left = setUp("Left");
-        left2 = setUp("Left2");
-        right = setUp("Right");
-        right2 = setUp("Right2");
-        up = setUp("Up");
-        up2 = setUp("Up2");
+        setDown(setUp("Down"));
+        setDown2(setUp("Down2"));
+        setLeft(setUp("Left"));
+        setLeft2(setUp("Left2"));
+        setRight(setUp("Right"));
+        setRight2(setUp("Right2"));
+        setUp(setUp("Up"));
+        setUp2(setUp("Up2"));
     }
 
     public BufferedImage setUp(String imageName) {
@@ -64,51 +64,51 @@ public class Melee extends Entity {
     }
 
     public void chase() {
-        if(!dead) {
-            int goalCol = (getGp().player.getWorldX() + getGp().player.solidArea.x) / getGp().tileSize;
-            int goalRow = (getGp().player.getWorldY() + getGp().player.solidArea.y) / getGp().tileSize;
+        if(!isDead()) {
+            int goalCol = (getGp().player.getWorldX() + getGp().player.getSolidArea().x) / getGp().tileSize;
+            int goalRow = (getGp().player.getWorldY() + getGp().player.getSolidArea().y) / getGp().tileSize;
             searchPath(goalCol, goalRow);
         }
     }
 
     public void update() {
-        if(!dead) {
+        if(!isDead()) {
             speed = 2 + (int) (Math.random() * 2);
             checkCollision();
             chase();
-            collisionOn = false;
+            setCollisionOn(false);
             getGp().cChecker.checkTile(this);
 
-            if (!collisionOn) {
-                if (direction.equals("up"))
+            if (!isCollisionOn()) {
+                if (getDirection().equals("up"))
                     setWorldY(getWorldY()-speed);
-                else if (direction.equals("down"))
+                else if (getDirection().equals("down"))
                     setWorldY(getWorldY()+speed);
-                else if (direction.equals("left"))
+                else if (getDirection().equals("left"))
                     setWorldX(getWorldX()-speed);
-                else if (direction.equals("right"))
+                else if (getDirection().equals("right"))
                     setWorldX(getWorldX()+speed);
             }
 
             if (Math.abs(getWorldX() - getGp().player.getWorldX()) < 36 && Math.abs(getWorldY() - getGp().player.getWorldY()) < 48) {
-                if (Player.hitCoolDown >= 90) {
+                if (Player.getHitCoolDown() >= 90) {
                     getGp().player.hp--;
-                    Player.hitCoolDown = 0;
+                    Player.setHitCoolDown(0);
                 }
             }
 
             if (hp <= 0) {
-                dead = true;
+                setDead(true);
             }
 
-            spriteCounter++;
-            if (spriteCounter > 10)
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                    spriteCounter = 0;
+            incrementSpriteCounter();
+            if (getSpriteCounter() > 10)
+                if (getSpriteNum() == 1) {
+                    setSpriteNum(2);
+                    resetSpriteCounter();
                 } else {
-                    spriteNum = 1;
-                    spriteCounter = 0;
+                    setSpriteNum(1);
+                    resetSpriteCounter();
                 }
         }
         else {
@@ -118,34 +118,34 @@ public class Melee extends Entity {
     }
 
     public void draw(Graphics2D g2) {
-        if(!dead) {
-            int screenX = getWorldX() - getGp().player.getWorldX() + getGp().player.screenX;
-            int screenY = getWorldY() - getGp().player.getWorldY() + getGp().player.screenY;
+        if(!isDead()) {
+            int screenX = getWorldX() - getGp().player.getWorldX() + getGp().player.getScreenX();
+            int screenY = getWorldY() - getGp().player.getWorldY() + getGp().player.getScreenY();
             BufferedImage image = null;
-            switch (direction) {
+            switch (getDirection()) {
                 case "up":
-                    if (spriteNum == 1)
-                        image = up;
+                    if (getSpriteNum() == 1)
+                        image = getUp();
                     else
-                        image = up2;
+                        image = getUp2();
                     break;
                 case "down":
-                    if (spriteNum == 1)
-                        image = down;
+                    if (getSpriteNum() == 1)
+                        image = getDown();
                     else
-                        image = down2;
+                        image = getDown2();
                     break;
                 case "left":
-                    if (spriteNum == 1)
-                        image = left;
+                    if (getSpriteNum() == 1)
+                        image = getLeft();
                     else
-                        image = left2;
+                        image = getLeft2();
                     break;
                 case "right":
-                    if (spriteNum == 1)
-                        image = right;
+                    if (getSpriteNum() == 1)
+                        image = getRight();
                     else
-                        image = right2;
+                        image = getRight2();
                     break;
             }
 

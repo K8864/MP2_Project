@@ -10,8 +10,8 @@ public class ClickDetection implements MouseListener {
     private static boolean click = false;
 
     public static void update() {
-        x = MouseInfo.getPointerInfo().getLocation().x- Main.window.getLocation().x-7;
-        y = MouseInfo.getPointerInfo().getLocation().y-Main.window.getLocation().y-30;
+        x = MouseInfo.getPointerInfo().getLocation().x- Main.getWindow().getLocation().x-7;
+        y = MouseInfo.getPointerInfo().getLocation().y-Main.getWindow().getLocation().y-30;
     }
 
     public static int getX() {

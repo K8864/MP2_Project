@@ -25,8 +25,8 @@ public class Bullet extends Entity {
         setWorldX(getGp().player.getWorldX());
         //worldY = gp.player.worldY;
         setWorldY(getGp().player.getWorldY());
-        screenX = gp.player.screenX;
-        screenY = gp.player.screenY;
+        screenX = gp.player.getScreenX();
+        screenY = gp.player.getScreenY();
         startX = gp.player.getWorldX();
         startY = gp.player.getWorldY();
     }
@@ -38,9 +38,9 @@ public class Bullet extends Entity {
         catch (IOException e) {
             e.printStackTrace();
         }
-        solidArea = new Rectangle(21, 21, 6, 6);
+        setSolidArea(new Rectangle(21, 21, 6, 6));
         speed = 10;
-        collisionOn = false;
+        setCollisionOn(false);
     }
 
     public static int getAmmo() {
@@ -68,12 +68,12 @@ public class Bullet extends Entity {
     }
 
     public void target(int x, int y) {
-        screenX = getGp().player.screenX;
-        screenY = getGp().player.screenY;
+        screenX = getGp().player.getScreenX();
+        screenY = getGp().player.getScreenY();
         startX = getGp().player.getWorldX();
         startY = getGp().player.getWorldY();
-        endX = getGp().player.getWorldX() - getGp().player.screenX + x-24;
-        endY = getGp().player.getWorldY() - getGp().player.screenY + y-24;
+        endX = getGp().player.getWorldX() - getGp().player.getScreenX() + x-24;
+        endY = getGp().player.getWorldY() - getGp().player.getScreenY() + y-24;
         slope = Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
         cosine = (endX - startX)/slope;
         sine = (endY - startY)/slope;
@@ -98,13 +98,13 @@ public class Bullet extends Entity {
     }
 
     public void draw(Graphics2D g2) {
-        if(!collisionOn) {
+        if(!isCollisionOn()) {
             g2.drawImage(pew, (int) screenX, (int) screenY, getGp().tileSize, getGp().tileSize, null);
         }
     }
 
     public void update() {
-        if(!collisionOn) {
+        if(!isCollisionOn()) {
             double x = cosine * speed;
             double y = sine * speed;
             //worldX += x;
@@ -115,10 +115,10 @@ public class Bullet extends Entity {
             screenY += y + (startY - getGp().player.getWorldY());
             startX = getGp().player.getWorldX();
             startY = getGp().player.getWorldY();
-            collisionOn = false;
+            setCollisionOn(false);
             int n = getGp().tileM.mapTileNum[((getWorldX() + 24) / getGp().tileSize)][((getWorldY() + 24) / getGp().tileSize)];
             if (getGp().tileM.tile[n].collision && !getGp().tileM.tile[n].flat) {
-                collisionOn = true;
+                setCollisionOn(true);
                 count = (int) (slope / speed) + 1;
             }
         }

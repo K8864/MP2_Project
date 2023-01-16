@@ -111,7 +111,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         //Debug
         long drawStart = 0;
-        if(keyH.showDrawTime)
+        if(keyH.isShowDrawTime())
             drawStart = System.nanoTime();
 
         if(gameState == titleState) {
@@ -177,7 +177,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
             entities.remove(player);
             ui.draw(g2);
-            if(keyH.showDrawTime) {
+            if(keyH.isShowDrawTime()) {
                 g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 36F));
                 long drawEnd = System.nanoTime();
                 long passed = drawEnd - drawStart;

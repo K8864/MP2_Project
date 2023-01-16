@@ -5,17 +5,21 @@ import main.GamePanel;
 import java.util.ArrayList;
 
 public class PathFinder {
-    GamePanel gp;
-    Node[][] node;
-    ArrayList<Node> openList = new ArrayList<>();
-    public ArrayList<Node> pathList = new ArrayList<>();
-    Node startNode, goalNode, currentNode;
-    boolean goalReached = false;
-    int step = 0;
+    private final GamePanel gp;
+    private Node[][] node;
+    private ArrayList<Node> openList = new ArrayList<>();
+    private ArrayList<Node> pathList = new ArrayList<>();
+    private Node startNode, goalNode, currentNode;
+    private boolean goalReached = false;
+    private int step = 0;
 
     public PathFinder(GamePanel gp) {
         this.gp = gp;
         instantiateNode();
+    }
+
+    public ArrayList<Node> getPathList() {
+        return pathList;
     }
 
     public void instantiateNode() {
@@ -36,9 +40,9 @@ public class PathFinder {
         int col = 0;
         int row = 0;
         while(col < gp.maxWorldCol && row < gp.maxWorldRow) {
-            node[col][row].open = false;
-            node[col][row].checked = false;
-            node[col][row].solid = false;
+            node[col][row].setOpen(false);
+            node[col][row].setChecked(false);
+            node[col][row].setSolid(false);
             col++;
             if(col == gp.maxWorldCol) {
                 col = 0;
@@ -62,7 +66,7 @@ public class PathFinder {
         while(col < gp.maxWorldCol && row < gp.maxWorldRow) {
             int tileNum = gp.tileM.mapTileNum[col][row];
             if(gp.tileM.tile[tileNum].collision)
-                node[col][row].solid = true;
+                node[col][row].setSolid(true);
             getCost(node[col][row]);
             col++;
             if(col == gp.maxWorldCol) {
@@ -73,20 +77,20 @@ public class PathFinder {
     }
 
     public void getCost(Node node) {
-        int xDistance = Math.abs(node.col - startNode.col);
-        int yDistance = Math.abs(node.row - startNode.row);
-        node.gCost = xDistance + yDistance;
-        xDistance = Math.abs(node.col - goalNode.col);
-        yDistance = Math.abs(node.row - goalNode.row);
-        node.hCost = xDistance + yDistance;
-        node.fCost = node.gCost + node.hCost;
+        int xDistance = Math.abs(node.getCol() - startNode.getCol());
+        int yDistance = Math.abs(node.getRow() - startNode.getRow());
+        node.setgCost(xDistance + yDistance);
+        xDistance = Math.abs(node.getCol() - goalNode.getCol());
+        yDistance = Math.abs(node.getRow() - goalNode.getRow());
+        node.sethCost(xDistance + yDistance);
+        node.setfCost(node.getgCost() + node.gethCost());
     }
 
     public boolean search() {
         while(!goalReached && step < 500) {
-            int col = currentNode.col;
-            int row = currentNode.row;
-            currentNode.checked = true;
+            int col = currentNode.getCol();
+            int row = currentNode.getRow();
+            currentNode.setChecked(true);
             openList.remove(currentNode);
             if (row - 1 >= 0)
                 openNode(node[col][row - 1]);
@@ -99,11 +103,11 @@ public class PathFinder {
             int bestNodeIndex = 0;
             int bestNodefCost = 999;
             for (int i = 0; i < openList.size(); i++) {
-                if (openList.get(i).fCost < bestNodefCost) {
+                if (openList.get(i).getfCost() < bestNodefCost) {
                     bestNodeIndex = i;
-                    bestNodefCost = openList.get(i).fCost;
-                } else if (openList.get(i).fCost == bestNodefCost)
-                    if (openList.get(i).gCost < openList.get(bestNodeIndex).gCost)
+                    bestNodefCost = openList.get(i).getfCost();
+                } else if (openList.get(i).getfCost() == bestNodefCost)
+                    if (openList.get(i).getgCost() < openList.get(bestNodeIndex).getgCost())
                         bestNodeIndex = i;
             }
             if (openList.size() == 0)
@@ -119,8 +123,8 @@ public class PathFinder {
     }
 
     public void openNode(Node node) {
-        if(!node.open && !node.checked && !node.solid) {
-            node.open = true;
+        if(!node.isOpen() && !node.isChecked() && !node.isSolid()) {
+            node.setOpen(true);
             node.parent = currentNode;
             openList.add(node);
         }

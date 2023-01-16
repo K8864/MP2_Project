@@ -7,7 +7,12 @@ import java.awt.event.KeyListener;
 import java.security.Key;
 
 public class KeyHandler implements KeyListener {
-    boolean showDrawTime = false;
+    private boolean showDrawTime = false;
+
+    public boolean isShowDrawTime() {
+        return showDrawTime;
+    }
+
     //useless
     @Override
     public void keyTyped(KeyEvent e) {}

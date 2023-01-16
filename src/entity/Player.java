@@ -10,19 +10,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Player extends Entity {
-    KeyHandler keyH;
+    private final KeyHandler keyH;
 
-    public static int hitCoolDown = 90;
+    private static int hitCoolDown = 90;
 
-    public final int screenX;
-    public final int screenY;
+    private final int screenX;
+    private final int screenY;
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
         this.keyH = keyH;
         setDefaultValues();
         getPlayerImage();
-        solidArea = new Rectangle(15, 21, 17, 24); // 16, 21, 16, 24
+        setSolidArea(new Rectangle(15, 21, 17, 24)); // 16, 21, 16, 24
         screenX = gp.screenWidth/2 - gp.tileSize/2;
         screenY = gp.screenHeight/2 - gp.tileSize/2;
     }
@@ -33,18 +33,34 @@ public class Player extends Entity {
         speed = 3;
         maxHp = 5;
         hp = 5;
-        direction = "down";
+        setDirection("down");
     }
 
     public void getPlayerImage(){
-        down = setUp("Down");
-        down2 = setUp("Down2");
-        left = setUp("Left");
-        left2 = setUp("Left2");
-        right = setUp("Right");
-        right2 = setUp("Right2");
-        up = setUp("Up");
-        up2 = setUp("Up2");
+        setDown(setUp("Down"));
+        setDown2(setUp("Down2"));
+        setLeft(setUp("Left"));
+        setLeft2(setUp("Left2"));
+        setRight(setUp("Right"));
+        setRight2(setUp("Right2"));
+        setUp(setUp("Up"));
+        setUp2(setUp("Up2"));
+    }
+
+    public static int getHitCoolDown() {
+        return hitCoolDown;
+    }
+
+    public int getScreenX() {
+        return screenX;
+    }
+
+    public int getScreenY() {
+        return screenY;
+    }
+
+    public static void setHitCoolDown(int h) {
+        hitCoolDown = h;
     }
 
     public BufferedImage setUp(String imageName) {
@@ -69,24 +85,24 @@ public class Player extends Entity {
         }
         if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {
-                direction = "up";
-                spriteCounter++;
+                setDirection("up");
+                incrementSpriteCounter();
             } else if (keyH.downPressed) {
-                direction = "down";
-                spriteCounter++;
+                setDirection("down");
+                incrementSpriteCounter();
             } else if (keyH.leftPressed) {
-                direction = "left";
-                spriteCounter++;
+                setDirection("left");
+                incrementSpriteCounter();
             } else if (keyH.rightPressed) {
-                direction = "right";
-                spriteCounter++;
+                setDirection("right");
+                incrementSpriteCounter();
             }
             // Check tile collision
-            collisionOn = false;
+            setCollisionOn(false);
             getGp().cChecker.checkTile(this);
             // if collision is off, player can move
-            if (!collisionOn) {
-                switch (direction) {
+            if (!isCollisionOn()) {
+                switch (getDirection()) {
                     case "up":
                         setWorldY(getWorldY()-speed);
                         break;
@@ -101,13 +117,13 @@ public class Player extends Entity {
                         break;
                 }
             }
-            if (spriteCounter > 10)
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                    spriteCounter = 0;
+            if (getSpriteCounter() > 10)
+                if (getSpriteNum() == 1) {
+                    setSpriteNum(2);
+                    resetSpriteCounter();
                 } else {
-                    spriteNum = 1;
-                    spriteCounter = 0;
+                    setSpriteNum(1);
+                    resetSpriteCounter();
                 }
         }
         hitCoolDown++;
@@ -116,30 +132,30 @@ public class Player extends Entity {
 
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
-        switch(direction) {
+        switch(getDirection()) {
             case "up":
-                if(spriteNum == 1)
-                    image = up;
+                if(getSpriteNum() == 1)
+                    image = getUp();
                 else
-                    image = up2;
+                    image = getUp2();
                 break;
             case "down":
-                if(spriteNum == 1)
-                    image = down;
+                if(getSpriteNum() == 1)
+                    image = getDown();
                 else
-                    image = down2;
+                    image = getDown2();
                 break;
             case "left":
-                if(spriteNum == 1)
-                    image = left;
+                if(getSpriteNum() == 1)
+                    image = getLeft();
                 else
-                    image = left2;
+                    image = getLeft2();
                 break;
             case "right":
-                if(spriteNum == 1)
-                    image = right;
+                if(getSpriteNum() == 1)
+                    image = getRight();
                 else
-                    image = right2;
+                    image = getRight2();
                 break;
         }
         g2.drawImage(image, screenX, screenY, null);
