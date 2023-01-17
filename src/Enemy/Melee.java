@@ -13,12 +13,13 @@ import java.io.IOException;
 public class Melee extends Entity {
     private final static int[] spawnX = {15, 24, 38, 33, 11, 11, 20, 31};
     private final static int[] spawnY = {11, 29, 32, 9, 30, 39, 39, 39};
+    private int existence = 0;
 
     public Melee(GamePanel gp, int x, int y) {
         super(gp);
-        speed = 3;
-        maxHp = 10;
-        hp = 10;
+        setSpeed(3);
+        setMaxHp(10);
+        setHp(10);
         setSolidArea(new Rectangle(15, 21, 24, 36));
         getEnemyImage();
         setDirection("down");
@@ -73,32 +74,38 @@ public class Melee extends Entity {
 
     public void update() {
         if(!isDead()) {
-            speed = 2 + (int) (Math.random() * 2);
-            checkCollision();
+//            setSpeed(2 + (int) (Math.random() * 2));
+            if(existence%2 == 0 || existence > 1200)
+                setSpeed(3);
+            else
+                setSpeed(2);
             chase();
-            setCollisionOn(false);
-            getGp().getcChecker().checkTile(this);
-
+            existence++;
             if (!isCollisionOn()) {
                 if (getDirection().equals("up"))
-                    setWorldY(getWorldY()-speed);
+                    setWorldY(getWorldY()-getSpeed());
                 else if (getDirection().equals("down"))
-                    setWorldY(getWorldY()+speed);
+                    setWorldY(getWorldY()+getSpeed());
                 else if (getDirection().equals("left"))
-                    setWorldX(getWorldX()-speed);
+                    setWorldX(getWorldX()-getSpeed());
                 else if (getDirection().equals("right"))
-                    setWorldX(getWorldX()+speed);
+                    setWorldX(getWorldX()+getSpeed());
             }
 
             if (Math.abs(getWorldX() - getGp().getPlayer().getWorldX()) < 36 && Math.abs(getWorldY() - getGp().getPlayer().getWorldY()) < 48) {
                 if (Player.getHitCoolDown() >= 90) {
-                    getGp().getPlayer().hp--;
+                    getGp().getPlayer().loseHp();
                     Player.setHitCoolDown(0);
                 }
+                setCollisionOn(true);
+            }
+            else {
+                setCollisionOn(false);
             }
 
-            if (hp <= 0) {
+            if (getHp() <= 0) {
                 setDead(true);
+                getGp().kill();
             }
 
             incrementSpriteCounter();

@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 public class Main {
 
     private static JFrame window;
-
     public static JFrame getWindow() {
         return window;
     }

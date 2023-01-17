@@ -20,11 +20,12 @@ public class TileManager {
         tile = new Tile[10];
         getTileImage();
         mapTileNum = new int[gp.getMaxWorldCol()][gp.getMaxWorldRow()];
-        loadMap("/maps/Big.txt");
+        loadMap("/maps/Map.txt");
     }
 
     public void getTileImage(){
-        setUp(0, "01", false);
+        setUp(0, "01", true);
+        tile[0].setFlat(true);
         setUp(1, "02", true);
         setUp(2, "03", true);
         tile[2].setFlat(true);
@@ -32,6 +33,9 @@ public class TileManager {
         setUp(4, "05", false);
         setUp(5, "06", true);
         setUp(6, "07", true);
+        setUp(7, "08", false);
+        setUp(8, "09", false);
+        setUp(9, "10", true);
     }
 
     public void setUp(int index, String imagePath, boolean collision) {

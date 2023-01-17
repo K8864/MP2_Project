@@ -3,6 +3,7 @@ package main;
 import entity.Bullet;
 import entity.Entity;
 import Enemy.Melee;
+import entity.Player;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public class CollisionChecker {
         int tileNum1, tileNum2;
         switch(entity.getDirection()) {
             case "up":
-                entityTopRow = (entityTopWorldY - entity.speed) / gp.getTileSize();
+                entityTopRow = (entityTopWorldY - entity.getSpeed()) / gp.getTileSize();
                 tileNum1 = gp.getTileM().mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.getTileM().mapTileNum[entityRightCol][entityTopRow];
                 if(gp.getTileM().tile[tileNum1].isCollision() || gp.getTileM().tile[tileNum2].isCollision()) {
@@ -33,7 +34,7 @@ public class CollisionChecker {
                 }
                 break;
             case "down":
-                entityBottomRow = (entityBottomWorldY + entity.speed) / gp.getTileSize();
+                entityBottomRow = (entityBottomWorldY + entity.getSpeed()) / gp.getTileSize();
                 tileNum1 = gp.getTileM().mapTileNum[entityLeftCol][entityBottomRow];
                 tileNum2 = gp.getTileM().mapTileNum[entityRightCol][entityBottomRow];
                 if(gp.getTileM().tile[tileNum1].isCollision() || gp.getTileM().tile[tileNum2].isCollision()) {
@@ -41,7 +42,7 @@ public class CollisionChecker {
                 }
                 break;
             case "left":
-                entityLeftCol = (entityLeftWorldX - entity.speed) / gp.getTileSize();
+                entityLeftCol = (entityLeftWorldX - entity.getSpeed()) / gp.getTileSize();
                 tileNum1 = gp.getTileM().mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.getTileM().mapTileNum[entityLeftCol][entityBottomRow];
                 if(gp.getTileM().tile[tileNum1].isCollision() || gp.getTileM().tile[tileNum2].isCollision()) {
@@ -49,7 +50,7 @@ public class CollisionChecker {
                 }
                 break;
             case "right":
-                entityRightCol = (entityRightWorldX + entity.speed) / gp.getTileSize();
+                entityRightCol = (entityRightWorldX + entity.getSpeed()) / gp.getTileSize();
                 tileNum1 = gp.getTileM().mapTileNum[entityRightCol][entityTopRow];
                 tileNum2 = gp.getTileM().mapTileNum[entityRightCol][entityBottomRow];
                 if(gp.getTileM().tile[tileNum1].isCollision() || gp.getTileM().tile[tileNum2].isCollision()) {
@@ -70,5 +71,14 @@ public class CollisionChecker {
             }
         }
         return index;
+    }
+
+    public void hitPlayer(Melee m) {
+        if (Math.abs(m.getWorldX() - gp.getPlayer().getWorldX()) < 36 && Math.abs(m.getWorldY() - gp.getPlayer().getWorldY()) < 48) {
+            m.setCollisionOn(true);
+        }
+        else {
+            m.setCollisionOn(false);
+        }
     }
 }

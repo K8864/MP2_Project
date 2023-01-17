@@ -38,10 +38,13 @@ public class KeyHandler implements KeyListener {
             Bullet.setAmmo(0);
         }
         if(code == KeyEvent.VK_X) {
-            if(!showDrawTime)
+            if(!showDrawTime) {
                 showDrawTime = true;
-            else if(showDrawTime)
+            }
+            else if(showDrawTime) {
                 showDrawTime = false;
+                Bullet.setAmmo(30);
+            }
         }
     }
 

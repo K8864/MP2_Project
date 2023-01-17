@@ -16,11 +16,28 @@ public class Entity {
     private boolean collisionOn = false;
     private boolean dead = false;
 
-    public int hp;
-    public int maxHp;
-    public int speed;
+    private int hp;
+    public int getHp() {
+        return hp;
+    }
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+    public void loseHp() {
+        hp--;
+    }
+    private int maxHp;
+    public int getMaxHp() {
+        return maxHp;
+    }
 
-    public boolean onPath = false;
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    private int speed;
+    public int getSpeed() {return speed;}
+    public void setSpeed(int s) {speed = s;}
 
     public Entity(GamePanel gp) {
         this.gp = gp;
@@ -198,6 +215,7 @@ public class Entity {
                 direction = "up";
                 checkCollision();
                 if(collisionOn) {
+                    setCollisionOn(false);
                     direction = "left";
                 }
             }
@@ -205,6 +223,7 @@ public class Entity {
                 direction = "up";
                 checkCollision();
                 if(collisionOn) {
+                    setCollisionOn(false);
                     direction = "right";
                 }
             }
@@ -212,6 +231,7 @@ public class Entity {
                 direction = "down";
                 checkCollision();
                 if(collisionOn) {
+                    setCollisionOn(false);
                     direction = "left";
                 }
             }
@@ -219,12 +239,17 @@ public class Entity {
                 direction = "down";
                 checkCollision();
                 if(collisionOn) {
+                    setCollisionOn(false);
                     direction = "right";
                 }
             }
             else if(enTopY < nextY)
                 direction = "down";
             else if(enBottomY > nextY)
+                direction = "up";
+            else if(enLeftX < nextX)
+                direction = "down";
+            else if(enRightX > nextX)
                 direction = "up";
         }
     }

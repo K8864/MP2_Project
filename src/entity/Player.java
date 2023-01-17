@@ -30,9 +30,9 @@ public class Player extends Entity {
     public void setDefaultValues() {
         setWorldX(1152);
         setWorldY(1008);
-        speed = 3;
-        maxHp = 5;
-        hp = 5;
+        setSpeed(3);
+        setMaxHp(5);
+        setHp(5);
         setDirection("down");
     }
 
@@ -78,10 +78,10 @@ public class Player extends Entity {
 
     public void update() {
         if(getGp().getClickChecker().getClick()) {
-            speed = 2;
+            setSpeed(2);
         }
         else {
-            speed = 3;
+            setSpeed(3);
         }
         if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {
@@ -104,16 +104,16 @@ public class Player extends Entity {
             if (!isCollisionOn()) {
                 switch (getDirection()) {
                     case "up":
-                        setWorldY(getWorldY()-speed);
+                        setWorldY(getWorldY()-getSpeed());
                         break;
                     case "down":
-                        setWorldY(getWorldY()+speed);
+                        setWorldY(getWorldY()+getSpeed());
                         break;
                     case "left":
-                        setWorldX(getWorldX()-speed);
+                        setWorldX(getWorldX()-getSpeed());
                         break;
                     case "right":
-                        setWorldX(getWorldX()+speed);
+                        setWorldX(getWorldX()+getSpeed());
                         break;
                 }
             }

@@ -1,12 +1,13 @@
 package main;
 
+import Enemy.Melee;
 import entity.Bullet;
 
 import java.awt.*;
 
 public class UI {
-    private GamePanel gp;
-    private Font font;
+    private final GamePanel gp;
+    private final Font font;
     private Graphics2D g2;
     private int commandNum = 2;
     private boolean play = true;
@@ -28,12 +29,12 @@ public class UI {
             else {
                 g2.drawString("Reloading...", 25, gp.getScreenHeight()-50);
             }
-            if(gp.getPlayer().hp > 0) {
+            if(gp.getPlayer().getHp() > 0) {
                 g2.setColor(Color.RED);
-                g2.fillRect(25, 50, gp.getPlayer().hp * (gp.getTileSize()), gp.getTileSize());
+                g2.fillRect(25, 50, gp.getPlayer().getHp() * (gp.getTileSize()), gp.getTileSize());
             }
             g2.setColor(Color.BLACK);
-            g2.drawRect(25, 50, gp.getPlayer().maxHp * (gp.getTileSize()), gp.getTileSize());
+            g2.drawRect(25, 50, gp.getPlayer().getMaxHp() * (gp.getTileSize()), gp.getTileSize());
         }
         if(gp.getGameState() == gp.getDeadState()){
             drawDeadScreen();
@@ -43,11 +44,19 @@ public class UI {
     public void drawDeadScreen() {
         g2.setColor(new Color(0, 0, 0, 150));
         g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
-        g2.setColor(Color.BLACK);
+        g2.setColor(Color.RED);
         String text = "Haha Ded";
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110F));
         int x = centerX(text);
-        int y = gp.getScreenHeight()/2;
+        int y = gp.getScreenHeight()/2 - gp.getTileSize();
+        g2.drawString(text, x, y);
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 48F));
+        g2.setColor(Color.WHITE);
+        text = "Seconds survived: " + gp.getFrame()/60;
+        y = gp.getScreenHeight()/2;
+        g2.drawString(text, x, y);
+        text = "Kills: " + gp.getKills();
+        y = gp.getScreenHeight()/2 + gp.getTileSize();
         g2.drawString(text, x, y);
     }
 

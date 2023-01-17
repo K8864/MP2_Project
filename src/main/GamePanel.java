@@ -37,6 +37,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     //Entity
     private ArrayList<Entity> entities = new ArrayList<Entity>();
+    private int kills = 0;
+    public int getKills() {return kills;}
+    public void kill() {kills++;}
 
     //Game State
     private int gameState;
@@ -54,6 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private int frameS = 0;
     private int frame = 0;
+    public int getFrame() {return frame;}
 
     private final TileManager tileM = new TileManager(this);
     public TileManager getTileM() {return tileM;}
@@ -113,9 +117,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
         else if(gameState == playState){
             player.update();
-            if(player.hp == 0) {
+            if(player.getHp() == 0) {
                 gameState = deadState;
             }
+            frame++;
         }
     }
 
@@ -134,12 +139,12 @@ public class GamePanel extends JPanel implements Runnable {
             tileM.draw(g2);
 
             entities.add(player);
-            if(frame % 300 == 0) {
+            if(frame % 360 == 0) {
                 Melee killer = Melee.spawn(this);
                 entities.add(killer);
             }
             if (gameState == playState) {
-                if (clickChecker.getClick() && Bullet.getAmmo() > 0 && frameS == 7) {
+                if (clickChecker.getClick() && Bullet.getAmmo() > 0 && frameS >= 7) {
                     Bullet shot = new Bullet(this);
                     shot.shoot(shot);
                     entities.add(shot);
@@ -155,7 +160,7 @@ public class GamePanel extends JPanel implements Runnable {
                             ((Bullet) entities.get(i)).setCount(((Bullet) entities.get(i)).getCount()+1);
                             if(cChecker.checkHit(((Bullet) entities.get(i)), entities) != -1) {
                                 int j = cChecker.checkHit(((Bullet) entities.get(i)), entities);
-                                entities.get(j).hp--;
+                                entities.get(j).loseHp();
                                 entities.remove(i);
                             }
                         } else {
@@ -196,11 +201,17 @@ public class GamePanel extends JPanel implements Runnable {
                 long passed = drawEnd - drawStart;
                 g2.setColor(Color.RED);
                 g2.drawString("Draw Time: " + passed, 10, 500);
-                System.out.println("Draw Time: " + passed);
-                player.hp = 5;
+                //System.out.println("Draw Time: " + passed);
+                player.setHp(5);
+                if((frame&2) == 0) {
+                    frameS = 7;
+                }
+                else {
+                    frameS = 0;
+                }
+                Bullet.setAmmo(1000);
             }
             g2.dispose();
         }
-        frame++;
     }
 }
