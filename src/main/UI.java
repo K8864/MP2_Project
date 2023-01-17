@@ -1,6 +1,5 @@
 package main;
 
-import Enemy.Melee;
 import entity.Bullet;
 
 import java.awt.*;

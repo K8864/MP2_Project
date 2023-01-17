@@ -2,8 +2,7 @@ package main;
 
 import entity.Bullet;
 import entity.Entity;
-import Enemy.Melee;
-import entity.Player;
+import enemy.Melee;
 
 import java.util.ArrayList;
 

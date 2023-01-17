@@ -2,7 +2,6 @@ package entity;
 
 import main.ClickDetection;
 import main.GamePanel;
-import main.Main;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

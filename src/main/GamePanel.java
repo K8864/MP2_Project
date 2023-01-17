@@ -1,5 +1,6 @@
 package main;
-import Enemy.Melee;
+
+import enemy.Melee;
 import ai.PathFinder;
 import entity.Bullet;
 import entity.Entity;
@@ -209,7 +210,7 @@ public class GamePanel extends JPanel implements Runnable {
                 else {
                     frameS = 0;
                 }
-                Bullet.setAmmo(1000);
+                Bullet.setAmmo(1000); // static var being edited in diff class
             }
             g2.dispose();
         }

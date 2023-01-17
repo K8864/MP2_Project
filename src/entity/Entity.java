@@ -17,23 +17,14 @@ public class Entity {
     private boolean dead = false;
 
     private int hp;
-    public int getHp() {
-        return hp;
-    }
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-    public void loseHp() {
-        hp--;
-    }
+    public int getHp() {return hp;}
+    public void setHp(int hp) {this.hp = hp;}
+    public void loseHp() {hp--;}
     private int maxHp;
     public int getMaxHp() {
         return maxHp;
     }
-
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
-    }
+    public void setMaxHp(int maxHp) {this.maxHp = maxHp;}
 
     private int speed;
     public int getSpeed() {return speed;}
