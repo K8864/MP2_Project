@@ -1,5 +1,6 @@
 package entity;
 
+import main.ClickDetection;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
@@ -13,6 +14,7 @@ public class Player extends Entity {
     private final KeyHandler keyH;
 
     private static int hitCoolDown = 90;
+    private int still = 30;
 
     private final int screenX;
     private final int screenY;
@@ -25,6 +27,7 @@ public class Player extends Entity {
         setSolidArea(new Rectangle(15, 21, 17, 24)); // 16, 21, 16, 24
         screenX = gp.getScreenWidth()/2 - gp.getTileSize()/2;
         screenY = gp.getScreenHeight()/2 - gp.getTileSize()/2;
+        ClickDetection.setShot(false);
     }
 
     public void setDefaultValues() {
@@ -77,11 +80,20 @@ public class Player extends Entity {
     }
 
     public void update() {
-        if(getGp().getClickChecker().getClick()) {
-            setSpeed(2);
+        if(Bullet.getShot()) {
+            Bullet.setShot(false);
+            still = 0;
+            setSpeed(0);
         }
         else {
             setSpeed(3);
+        }
+        if(still <= 30) {
+            setSpeed(1);
+            still++;
+        }
+        else {
+            ClickDetection.setShot(false);
         }
         if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {

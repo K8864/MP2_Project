@@ -9,12 +9,17 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Bullet extends Entity {
-    private static int ammo = 30;
+    private static int ammo = 12;
     private double startX, startY, endX, endY, screenX, screenY, cosine, sine, slope;
     private int speed = 9;
     private static int frameR = 0;
     private BufferedImage pew;
     private int count = 0;
+    private static boolean shot = false;
+    public static boolean getShot() {return shot;}
+    public static void setShot(boolean s) {shot = s;}
+    private double randX;
+    private double randY;
 
 
     public Bullet(GamePanel gp) {
@@ -38,7 +43,7 @@ public class Bullet extends Entity {
             e.printStackTrace();
         }
         setSolidArea(new Rectangle(21, 21, 6, 6));
-        speed = 10;
+        speed = 12;
         setCollisionOn(false);
     }
 
@@ -76,17 +81,38 @@ public class Bullet extends Entity {
         slope = Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
         cosine = (endX - startX)/slope;
         sine = (endY - startY)/slope;
+        randX = Math.abs(endX - startX)/7;
+        randY = Math.abs(endY - startY)/7;
+        if(sine > 0 && cosine > 0) {
+            endY += (randX/2)-((Math.random() * randX)+1);
+            endX += (randY/2)-((Math.random() * randY)+1);
+        }
+        else if(sine > 0 && cosine < 0) {
+            endY -= (randX/2)-((Math.random() * randX)+1);
+            endX += (randY/2)-((Math.random() * randY)+1);
+        }
+        else if (sine < 0 && cosine < 0) {
+            endY -= (randX/2)-((Math.random() * randX)+1);
+            endX -= (randY/2)-((Math.random() * randY)+1);
+        }
+        else {
+            endY += (randX/2)-((Math.random() * randX)+1);
+            endX -= (randY/2)-((Math.random() * randY)+1);
+        }
+        cosine = (endX - startX)/slope;
+        sine = (endY - startY)/slope;
     }
 
     public void shoot(Bullet b) {
         ClickDetection.setShot(false);
         b.target(ClickDetection.getX(), ClickDetection.getY());
         ammo--;
+        shot = true;
     }
 
     public static void reload() {
-        if(frameR == 180) {
-            Bullet.ammo = 30;
+        if(frameR == 90) {
+            Bullet.ammo = 12;
             frameR = 0;
         }
         else {

@@ -43,7 +43,7 @@ public class KeyHandler implements KeyListener {
             }
             else if(showDrawTime) {
                 showDrawTime = false;
-                Bullet.setAmmo(30);
+                Bullet.setAmmo(12);
             }
         }
     }

@@ -118,6 +118,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
         else if(gameState == playState){
             player.update();
+            if(frame < 60) {
+                ClickDetection.setShot(false);
+            }
             if(player.getHp() == 0) {
                 gameState = deadState;
             }
@@ -140,19 +143,21 @@ public class GamePanel extends JPanel implements Runnable {
             tileM.draw(g2);
 
             entities.add(player);
-            if(frame % 360 == 0) {
-                Melee killer = Melee.spawn(this);
-                entities.add(killer);
+            if(frame % 750 == 0) {
+                for(int i=0; i<2; i++) {
+                    Melee killer = Melee.spawn(this);
+                    entities.add(killer);
+                }
             }
             if (gameState == playState) {
-                if (clickChecker.getClick() && Bullet.getAmmo() > 0 && frameS >= 7) {
+                if (clickChecker.getClick() && Bullet.getAmmo() > 0 && frameS >= 60) {
                     Bullet shot = new Bullet(this);
                     shot.shoot(shot);
                     entities.add(shot);
                     frameS = 0;
                 } else if (Bullet.getAmmo() == 0)
                     Bullet.reload();
-                else if (frameS < 7)
+                else if (frameS < 60)
                     frameS++;
                 for (int i = 0; i < entities.size(); i++) {
                     if (entities.get(i) instanceof Bullet) {
@@ -205,7 +210,7 @@ public class GamePanel extends JPanel implements Runnable {
                 //System.out.println("Draw Time: " + passed);
                 player.setHp(5);
                 if((frame&2) == 0) {
-                    frameS = 7;
+                    frameS = 60;
                 }
                 else {
                     frameS = 0;

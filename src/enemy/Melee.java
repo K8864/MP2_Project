@@ -19,7 +19,7 @@ public class Melee extends Entity {
         super(gp);
         setSpeed(3);
         setMaxHp(10);
-        setHp(10);
+        setHp(3);
         setSolidArea(new Rectangle(15, 21, 24, 36));
         getEnemyImage();
         setDirection("down");
@@ -75,7 +75,7 @@ public class Melee extends Entity {
     public void update() {
         if(!isDead()) {
 //            setSpeed(2 + (int) (Math.random() * 2));
-            if(existence%2 == 0 || existence > 1200)
+            if(existence%2 == 0 || existence%3 == 0 ||existence > 1200)
                 setSpeed(3);
             else
                 setSpeed(2);
