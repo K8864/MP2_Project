@@ -192,12 +192,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             for(Entity e: entities) {
-                if (e instanceof Bullet)
-                    e.draw(g2);
-                else if(e instanceof Player)
-                    e.draw(g2);
-                else if(e instanceof Melee)
-                    e.draw(g2);
+                e.draw(g2);
             }
             entities.remove(player);
             ui.draw(g2);
